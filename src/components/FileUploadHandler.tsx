@@ -13,13 +13,9 @@ const UploadContainer = styled.div`
   margin: 1rem;
   transition: background-color 0.2s ease;
   flex-direction: column;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
 `;
 
-const UploadLabel = styled.button`
+const UploadLabel = styled.label`
   font-weight: bold;
   color: rgb(114, 114, 114);
   cursor: pointer;
@@ -28,16 +24,68 @@ const UploadLabel = styled.button`
 `;
 
 const UploadInput = styled.input`
-  display: none;
+  display: block;
 `;
 
-const FileUploadHandler = () => {
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const DownloadSection = styled.div`
+  border: 1px solid rgb(220, 220, 220);
+  padding: 1rem;
+  background-color: #f9f9f9;
+  text-align: center;
+`;
+
+const DownloadButton = styled.button`
+  background-color: #7736f8;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.8rem;
+`;
+
+interface FileUploadHandlerProps {
+  onZipUpload: (file: File) => void;
+}
+
+const FileUploadHandler: React.FC<FileUploadHandlerProps> = ({
+  onZipUpload,
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.name.endsWith(".zip")) {
+      onZipUpload(file);
+    }
+  };
+
   return (
-    <UploadContainer>
-      <UploadLabel>파일 선택</UploadLabel>
-      <p>또는 드래그해서 파일을 업로드 하세요</p>
-      <UploadInput id="zip-upload" type="file" accept=".zip" />
-    </UploadContainer>
+    <Wrapper>
+      <UploadContainer>
+        <UploadLabel htmlFor="zip-upload">
+          <UploadInput
+            id="zip-upload"
+            type="file"
+            accept=".zip"
+            onChange={handleChange}
+          />
+        </UploadLabel>
+      </UploadContainer>
+
+      <DownloadSection>
+        <p>
+          수정된 파일을 모두 저장한 후, 아래 버튼을 눌러 ZIP 파일로 다운로드할
+          수 있습니다.
+        </p>
+        <DownloadButton>ZIP 파일 다운로드</DownloadButton>
+      </DownloadSection>
+    </Wrapper>
   );
 };
 
