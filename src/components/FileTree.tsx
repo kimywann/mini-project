@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 import { useState } from "react";
-import { useTab } from "../contexts/useTab";
+import { useTab } from "../hooks/useTab";
 
 import type { TreeNode } from "../types/tree";
 

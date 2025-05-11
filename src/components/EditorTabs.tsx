@@ -1,4 +1,4 @@
-import { useTab } from "../contexts/useTab";
+import { useTab } from "../hooks/useTab";
 import styled from "@emotion/styled";
 
 const TabBar = styled.div`
