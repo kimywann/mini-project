@@ -1,19 +1,8 @@
 import { useState } from "react";
-import type { ReactNode } from "react";
 import { TabContext } from "./TabContext";
 
-export interface Tab {
-  name: string;
-  path: string;
-}
-
-export interface TabContextType {
-  tabs: Tab[];
-  activeTab: Tab | null;
-  setActiveTab: (tab: Tab) => void;
-  openTab: (tab: Tab) => void;
-  closeTab: (path: string) => void;
-}
+import type { ReactNode } from "react";
+import type { Tab } from "../types/tab";
 
 export const TabProvider = ({ children }: { children: ReactNode }) => {
   const [tabs, setTabs] = useState<Tab[]>([]);

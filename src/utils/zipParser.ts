@@ -1,7 +1,4 @@
-export interface ZipEntry {
-  filename: string;
-  isDirectory: boolean;
-}
+import type { ZipEntry } from "../types/zip";
 
 export const parseZipFile = async (file: File): Promise<ZipEntry[]> => {
   const arrayBuffer = await file.arrayBuffer();

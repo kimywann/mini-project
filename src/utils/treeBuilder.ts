@@ -1,11 +1,5 @@
-import type { ZipEntry } from "./zipParser";
-
-export interface TreeNode {
-  name: string;
-  isDirectory: boolean;
-  children?: TreeNode[]; // 디렉토리일 경우
-  content?: string; // 파일일 경우
-}
+import type { ZipEntry } from "../types/zip";
+import type { TreeNode } from "../types/tree";
 
 export const buildFileTree = (entries: ZipEntry[]): TreeNode[] => {
   const root: TreeNode[] = [];

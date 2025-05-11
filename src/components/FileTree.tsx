@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
+
 import { useState } from "react";
-import type { TreeNode } from "../utils/treeBuilder";
 import { useTab } from "../contexts/useTab";
+
+import type { TreeNode } from "../types/tree";
 
 interface FileTreeProps {
   tree: TreeNode[];
