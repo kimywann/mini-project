@@ -16,6 +16,7 @@ import { buildFileTree } from "./utils/treeBuilder";
 function App() {
   const [tree, setTree] = useState<TreeNode[]>([]);
   const [filePath, setFilePath] = useState<string>("");
+  const [fileContent, setFileContent] = useState<string>("");
 
   const handleZipUpload = async (file: File) => {
     const entries = await parseZipFile(file);
@@ -23,8 +24,9 @@ function App() {
     setTree(treeData);
   };
 
-  const handleFileSelect = (filePath: string) => {
-    setFilePath(filePath); // fileContent는 필요하지 않으므로 제거
+  const handleFileSelect = (filePath: string, content: string) => {
+    setFilePath(filePath);
+    setFileContent(content);
   };
 
   return (
@@ -37,7 +39,10 @@ function App() {
         </div>
         <div className="editor-section">
           <EditorTabs />
-          <MonacoEditorComponent filePath={filePath} />
+          <MonacoEditorComponent
+            filePath={filePath}
+            fileContent={fileContent}
+          />
         </div>
       </div>
     </div>
