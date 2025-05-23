@@ -1,5 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import styled from "@emotion/styled";
+
+const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #1e1e1e;
+`;
+
+const ImagePreview = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+`;
 
 const getLanguageFromExtension = (filePath: string): string => {
   const ext = filePath.split(".").pop()?.toLowerCase();
@@ -18,44 +33,45 @@ const getLanguageFromExtension = (filePath: string): string => {
     case "md":
       return "markdown";
     case "txt":
+      return "plaintext";
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "svg":
+      return "image";
     default:
       return "plaintext";
   }
 };
 
-const MonacoEditorComponent = ({ filePath }: { filePath: string }) => {
-  const [fileContent, setFileContent] = useState<string>("");
+interface MonacoEditorComponentProps {
+  filePath: string;
+  fileContent: string;
+}
+
+const MonacoEditorComponent = ({
+  filePath,
+  fileContent,
+}: MonacoEditorComponentProps) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const editorInstanceRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(
     null
   );
 
   useEffect(() => {
-    if (!filePath) return;
-
-    const loadFileContent = async () => {
-      console.log("Fetching file from:", filePath);
-      try {
-        const response = await fetch(filePath);
-        if (!response.ok) {
-          throw new Error(`Failed to load file: ${response.statusText}`);
-        }
-        const text = await response.text();
-        console.log("File content loaded:", text); // 파일 내용 확인
-        setFileContent(text);
-      } catch (error) {
-        console.error("파일 로딩 실패:", error);
-        setFileContent("// 파일을 불러오지 못했습니다.");
-      }
-    };
-
-    loadFileContent();
-  }, [filePath]);
-
-  useEffect(() => {
     if (!editorRef.current || !fileContent) return;
 
     const language = getLanguageFromExtension(filePath);
+
+    if (language === "image") {
+      // 이미지 파일인 경우 에디터를 숨기고 이미지를 표시
+      if (editorInstanceRef.current) {
+        editorInstanceRef.current.dispose();
+        editorInstanceRef.current = null;
+      }
+      return;
+    }
 
     if (!editorInstanceRef.current) {
       editorInstanceRef.current = monaco.editor.create(editorRef.current, {
@@ -76,6 +92,18 @@ const MonacoEditorComponent = ({ filePath }: { filePath: string }) => {
   }, [fileContent, filePath]);
 
   if (!filePath) return null; // filePath가 없으면 컴포넌트 렌더링하지 않음
+
+  const language = getLanguageFromExtension(filePath);
+  if (language === "image") {
+    return (
+      <ImageContainer>
+        <ImagePreview
+          src={`data:image/${filePath.split(".").pop()};base64,${fileContent}`}
+          alt={filePath}
+        />
+      </ImageContainer>
+    );
+  }
 
   return <div ref={editorRef} style={{ height: "100%", width: "100%" }} />;
 };
