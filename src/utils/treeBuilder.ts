@@ -4,7 +4,7 @@ import type { TreeNode } from "../types/tree";
 export const buildFileTree = (entries: ZipEntry[]): TreeNode[] => {
   const root: TreeNode[] = [];
 
-  entries.forEach(({ filename, isDirectory }) => {
+  entries.forEach(({ filename, isDirectory, content }) => {
     const parts = filename.split("/").filter(Boolean);
     let currentLevel = root;
 
@@ -17,6 +17,7 @@ export const buildFileTree = (entries: ZipEntry[]): TreeNode[] => {
           name: part,
           isDirectory: index < parts.length - 1 || isDirectory,
           children: [],
+          content: index === parts.length - 1 ? content : undefined,
         };
         currentLevel.push(newNode);
         currentLevel = newNode.children!;
