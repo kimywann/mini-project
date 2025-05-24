@@ -29,7 +29,7 @@ const NodeWrapper = styled.div`
 
 const Arrow = styled.span`
   display: inline-block;
-  width: 1.5rem;
+  width: 1.4rem;
 `;
 
 const Node = styled.div<{ isDirectory: boolean }>`
